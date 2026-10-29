@@ -10,7 +10,9 @@
   ------------------------------------------------------------
   图片：images/yaoxinglu/cover.webp、board.webp
         images/gongyita/cover.webp、board.webp
-  文字：改 <script> 里的 const works 即可。
+        images/tasks/shop-01.webp、shop-02.webp（测试题·卡通休闲商店）
+        images/tasks/recharge-01.webp（测试题·海外棋牌活动页）
+  文字：改 <script> 里的 const works / const tasks 即可。
 -->
 <style>
   :root{
@@ -217,6 +219,48 @@
   .reveal{opacity:0;transform:translateY(26px);transition:opacity .9s ease,transform .9s cubic-bezier(.2,.7,.2,1)}
   .reveal.in{opacity:1;transform:none}
 
+  /* ================= 测试题 ================= */
+  .tasks-sec{position:relative;padding:76px 0 112px;border-top:1px solid var(--line-soft)}
+  .tasks{display:flex;flex-direction:column;gap:78px}
+  .task-head{display:flex;align-items:center;gap:16px;flex-wrap:wrap;margin:0 0 26px}
+  .task-no{
+    flex:none;width:26px;height:26px;display:grid;place-items:center;
+    font-family:var(--serif);font-size:13px;color:var(--gold);
+    border:1px solid var(--gold-dim);background:rgba(201,162,94,.06);
+  }
+  .task-head h2{
+    font-family:var(--serif);font-weight:600;margin:0;
+    font-size:clamp(19px,2.3vw,25px);letter-spacing:.06em;
+  }
+  .task-head .rule{flex:1;height:1px;min-width:24px;background:linear-gradient(to right,var(--line),transparent)}
+  .task-meta{font-size:12px;color:var(--muted);letter-spacing:.14em;margin:0}
+
+  .shots{display:flex;gap:22px;align-items:flex-start;flex-wrap:wrap;justify-content:center}
+  .shot{
+    position:relative;display:block;overflow:hidden;
+    border:1px solid var(--line-soft);background:#0f131a;
+    box-shadow:0 28px 64px -46px rgba(0,0,0,.95);
+    cursor:zoom-in;transition:border-color .35s ease;
+  }
+  .shot img{
+    display:block;width:100%;height:auto;
+    transition:transform .7s cubic-bezier(.2,.7,.2,1),filter .5s ease;
+  }
+  .shot:hover{border-color:var(--gold-dim)}
+  .shot:hover img{transform:scale(1.025);filter:brightness(.88)}
+  .shot.portrait img{height:680px;width:auto}
+  .shot.portrait:nth-child(2){margin-top:52px}
+  .shot:not(.portrait){flex:1 1 100%}
+  .shot .zoom-badge{
+    position:absolute;right:10px;top:10px;z-index:2;
+    width:26px;height:26px;display:grid;place-items:center;
+    font-size:11px;color:#eae4d7;line-height:1;
+    background:rgba(10,13,18,.6);border:1px solid rgba(201,162,94,.42);
+    backdrop-filter:blur(6px);transition:.3s ease;
+    opacity:0;
+  }
+  .shot:hover .zoom-badge{opacity:1;background:var(--gold);color:#15110a;border-color:var(--gold)}
+
   /* ================= 页脚 ================= */
   footer{border-top:1px solid var(--line-soft);padding:40px 0 64px}
   footer .wrap{
@@ -259,7 +303,10 @@
     height:100vh;overflow-y:auto;padding-top:59px;
     overscroll-behavior:contain;-webkit-overflow-scrolling:touch;
   }
-  .viewer-body img{display:block;width:100%;max-width:1440px;margin:0 auto;height:auto}
+  .viewer-body img{display:block;width:auto;max-width:100%;margin:0 auto;height:auto}
+  /* 单屏界面（竖版截图）：默认按高度适配，一屏看完；点查看原图再 1:1 */
+  .viewer-body img.fit-h{max-height:calc(100vh - 128px);margin:22px auto 0}
+  .viewer-body.zoom img.fit-h{max-height:none}
   .viewer-body .stage{width:100%}
   /* 原图模式：1:1 像素显示，可上下左右滚动；容器更宽时保持居中 */
   .viewer-body.zoom{overflow:auto}
@@ -289,6 +336,15 @@
     .media .corner{left:12px;top:12px;font-size:11px}
     .viewer-bar{padding:0 12px;gap:10px}
     .viewer-bar .sub{display:none}
+    .tasks-sec{padding:52px 0 76px}
+    .tasks{gap:52px}
+    .shots{gap:14px}
+    .shot.portrait img{height:430px}
+    .shot.portrait:nth-child(2){margin-top:0}
+    .task-head{margin-bottom:18px;gap:12px}
+  }
+  @media (max-width:560px){
+    .shot.portrait img{height:330px}
   }
 </style>
 </head>
@@ -336,6 +392,17 @@
       <div class="works" id="works" data-page-node-id="KQlQIUt2PyR9KR8RgDAjpI"><!-- 由脚本渲染 --></div>
     </div>
   </section>
+
+  <section class="tasks-sec" id="tasks-sec">
+    <div class="wrap">
+      <div class="sec-label"><b>02</b> 测试题 / Design Tasks</div>
+      <p class="hint-line">
+        <span class="ico">i</span>
+        点击图片可放大查看
+      </p>
+      <div class="tasks" id="tasks"><!-- 由脚本渲染 --></div>
+    </div>
+  </section>
 </main>
 
 <footer data-page-node-id="KVCymLG36LXHm52CU75DnM">
@@ -356,7 +423,7 @@
   </div>
   <div class="viewer-progress" data-page-node-id="gqk2neCKHufMYKb32Sg8zD"><i id="v-bar" data-page-node-id="r9HGRRnFO2CNBp0rCn89jA"></i></div>
   <div class="viewer-body" id="v-body" data-page-node-id="G0sHqDJHyrIhOk94plIxV2"></div>
-  <div class="v-tip" id="v-tip" data-page-node-id="5jbSiGLfCTzBQBD9sbhfqJ">滚动查看完整长图 · 点「查看原图」可 1:1 看细节 · 按 Esc 或右上角「关闭」返回</div>
+  <div class="v-tip" id="v-tip" data-page-node-id="5jbSiGLfCTzBQBD9sbhfqJ">点「查看原图」可 1:1 看细节 · 按 Esc 或右上角「关闭」返回</div>
 </div>
 
 <script>
@@ -396,6 +463,27 @@ const works = [
   }
 ];
 
+/* 测试题：两个分类，点图放大 */
+const tasks = [
+  {
+    no: "A",
+    title: "卡通休闲 · 商店界面",
+    meta: "移动端 · 2 屏",
+    shots: [
+      { src: "images/tasks/shop-01.webp", sub: "商店 · 金币档位", portrait: true, fit: "height" },
+      { src: "images/tasks/shop-02.webp", sub: "商店 · 套餐特权", portrait: true, fit: "height" }
+    ]
+  },
+  {
+    no: "B",
+    title: "海外棋牌 · 充值活动页",
+    meta: "活动弹窗 · 1 屏",
+    shots: [
+      { src: "images/tasks/recharge-01.webp", sub: "充值活动 · 奖励领取" }
+    ]
+  }
+];
+
 const grid = document.getElementById("works");
 
 works.forEach((w, i) => {
@@ -426,6 +514,33 @@ works.forEach((w, i) => {
   grid.appendChild(el);
 });
 
+const taskGrid = document.getElementById("tasks");
+tasks.forEach(t => {
+  const el = document.createElement("article");
+  el.className = "task reveal";
+  el.innerHTML = `
+    <div class="task-head">
+      <span class="task-no">${t.no}</span>
+      <h2>${t.title}</h2>
+      <span class="rule"></span>
+      <span class="task-meta">${t.meta}</span>
+    </div>
+    <div class="shots">
+      ${t.shots.map(s => `
+        <a class="shot${s.portrait ? " portrait" : ""}" href="#" role="button" aria-label="放大查看 ${t.title}">
+          <img src="${s.src}" alt="${t.title} · ${s.sub}" loading="lazy">
+          <span class="zoom-badge">⤢</span>
+        </a>`).join("")}
+    </div>`;
+  el.querySelectorAll(".shot").forEach((a, i) => {
+    a.addEventListener("click", e => {
+      e.preventDefault();
+      openViewer({ title: t.title, sub: t.shots[i].sub, board: t.shots[i].src, fit: t.shots[i].fit });
+    });
+  });
+  taskGrid.appendChild(el);
+});
+
 const topBar = document.getElementById("top");
 const onScroll = () => topBar.classList.toggle("solid", window.scrollY > 40);
 onScroll();
@@ -447,7 +562,7 @@ let tipTimer = null;
 
 function openViewer(w){
   vTitle.textContent = w.title;
-  vSub.textContent = w.type.split(" · ")[0];
+  vSub.textContent = w.sub || w.type.split(" · ")[0];
   setZoom(false);
 
   vBody.innerHTML = '<div class="loading">加载长图…</div>';
@@ -463,7 +578,8 @@ function openViewer(w){
 
   const img = new Image();
   img.src = w.board;
-  img.alt = w.title + " 完整作品集长图";
+  img.alt = w.title + " 界面图";
+  if (w.fit === "height") img.className = "fit-h";
   img.onload = () => {
     const stage = document.createElement("div");
     stage.className = "stage";
